@@ -3,31 +3,1135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jig - Cybersecurity Assistant</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>JIG - Professional AI Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f8f8;
+            --bg-tertiary: #f0f0f0;
+            --text-primary: #000000;
+            --text-secondary: #333333;
+            --text-tertiary: #666666;
+            --border-color: #e0e0e0;
+            --accent: #333333;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            margin-right: 10px;
+            background-color: var(--text-primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-primary);
+            font-weight: bold;
+            transform-style: preserve-3d;
+            animation: rotate3d 8s infinite linear;
+        }
+
+        @keyframes rotate3d {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--text-primary);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--text-primary);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Left Panel */
+        .left-panel {
+            width: 280px;
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+            overflow-y: auto;
+        }
+
+        .panel-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+
+        .history-item {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background-color: var(--bg-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .history-item:hover {
+            border-color: var(--border-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--shadow);
+        }
+
+        .history-item-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .history-item-time {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+        }
+
+        /* Center Content */
+        .center-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Landing Page */
+        .landing-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .landing-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        .landing-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background-color: var(--text-primary);
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--bg-tertiary);
+        }
+
+        .jig-3d-container {
+            width: 200px;
+            height: 200px;
+            perspective: 1000px;
+            margin-bottom: 2rem;
+        }
+
+        .jig-3d {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: jigRotate 15s infinite linear;
+        }
+
+        @keyframes jigRotate {
+            0% { transform: rotateX(0) rotateY(0); }
+            100% { transform: rotateX(360deg) rotateY(360deg); }
+        }
+
+        .jig-3d-face {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 2px solid var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .jig-3d-face:nth-child(1) { transform: rotateY(0deg) translateZ(100px); }
+        .jig-3d-face:nth-child(2) { transform: rotateY(90deg) translateZ(100px); }
+        .jig-3d-face:nth-child(3) { transform: rotateY(180deg) translateZ(100px); }
+        .jig-3d-face:nth-child(4) { transform: rotateY(-90deg) translateZ(100px); }
+        .jig-3d-face:nth-child(5) { transform: rotateX(90deg) translateZ(100px); }
+        .jig-3d-face:nth-child(6) { transform: rotateX(-90deg) translateZ(100px); }
+
+        /* Chat Interface */
+        .chat-container {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .message {
+            display: flex;
+            gap: 1rem;
+            max-width: 80%;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .message.user .message-avatar {
+            background-color: var(--text-primary);
+            color: var(--bg-primary);
+        }
+
+        .message.assistant .message-avatar {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .message-content {
+            padding: 1rem;
+            border-radius: 12px;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .message.user .message-content {
+            background-color: var(--text-primary);
+            color: var(--bg-primary);
+        }
+
+        .chat-input-container {
+            padding: 1rem;
+            border-top: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            font-size: 1rem;
+            resize: none;
+            outline: none;
+            transition: var(--transition);
+            background-color: var(--bg-primary);
+            max-height: 120px;
+        }
+
+        .chat-input:focus {
+            border-color: var(--text-primary);
+        }
+
+        .chat-send {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--text-primary);
+            color: var(--bg-primary);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .chat-send:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+
+        /* Right Panel */
+        .right-panel {
+            width: 380px;
+            background-color: var(--bg-secondary);
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 2px solid transparent;
+            font-weight: 500;
+        }
+
+        .tab:hover {
+            background-color: var(--bg-tertiary);
+        }
+
+        .tab.active {
+            border-bottom-color: var(--text-primary);
+        }
+
+        .tab-content {
+            display: none;
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .window {
+            background-color: var(--bg-primary);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+            overflow: hidden;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .window-header {
+            padding: 0.75rem;
+            background-color: var(--bg-tertiary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+        }
+
+        .window-title {
+            font-weight: 600;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .window-control {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .window-minimize {
+            background-color: #fbbc05;
+        }
+
+        .window-maximize {
+            background-color: #34a853;
+        }
+
+        .window-close {
+            background-color: #ea4335;
+        }
+
+        .window-content {
+            padding: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 1rem 2rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .left-panel, .right-panel {
+                position: absolute;
+                height: 100%;
+                z-index: 50;
+                transform: translateX(-100%);
+            }
+
+            .right-panel {
+                right: 0;
+                transform: translateX(100%);
+            }
+
+            .left-panel.open, .right-panel.open {
+                transform: translateX(0);
+            }
+
+            .panel-toggle {
+                display: block;
+                position: absolute;
+                top: 1rem;
+                z-index: 60;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background-color: var(--text-primary);
+                color: var(--bg-primary);
+                border: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+            }
+
+            .left-panel-toggle {
+                left: 1rem;
+            }
+
+            .right-panel-toggle {
+                right: 1rem;
+            }
+        }
+
+        .panel-toggle {
+            display: none;
+        }
+
+        /* Loading Animation */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.5rem 0;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--text-tertiary);
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Citation */
+        .citation {
+            display: inline-block;
+            margin: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            background-color: var(--bg-tertiary);
+            border-radius: 4px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .citation:hover {
+            background-color: var(--border-color);
+        }
+    </style>
 </head>
 <body>
-    <div id="app-container">
-        <aside id="sidebar">
-            <div class="sidebar-header">
-                <h2>Chat History</h2>
-                <button class="new-chat-button">+ New Chat</button>
+    <header>
+        <div class="logo">
+            <div class="logo-icon">J</div>
+            <span>JIG</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#" id="nav-chat">Chat</a></li>
+                <li><a href="#" id="nav-quizzes">Quizzes</a></li>
+                <li><a href="#" id="nav-certifications">Certifications</a></li>
+                <li><a href="#" id="nav-docs">Docs</a></li>
+                <li><a href="#" id="nav-account">Account</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="main-container">
+        <button class="panel-toggle left-panel-toggle" id="left-panel-toggle">☰</button>
+        <button class="panel-toggle right-panel-toggle" id="right-panel-toggle">☰</button>
+
+        <div class="left-panel" id="left-panel">
+            <div class="panel-header">
+                <span>Chat History</span>
+                <button class="btn btn-secondary" id="new-chat-btn">New Chat</button>
             </div>
-            <div class="sidebar-content">
-                <!-- Placeholder for chat history links -->
-                <p>No chats yet.</p>
+            <div class="history-list" id="history-list">
+                <div class="history-item">
+                    <div class="history-item-title">Introduction to JIG</div>
+                    <div class="history-item-time">Today, 10:30 AM</div>
+                </div>
+                <div class="history-item">
+                    <div class="history-item-title">AI and Machine Learning</div>
+                    <div class="history-item-time">Yesterday, 3:45 PM</div>
+                </div>
+                <div class="history-item">
+                    <div class="history-item-title">Web Development Best Practices</div>
+                    <div class="history-item-time">May 15, 2:15 PM</div>
+                </div>
             </div>
-        </aside>
-        <main id="chat-area">
-            <div id="chat-history">
-                <!-- Chat messages will be appended here -->
+            <div class="panel-header">
+                <span>Categories</span>
             </div>
-            <form id="chat-form">
-                <input type="text" id="message-input" placeholder="Type your message to Jig..." autocomplete="off">
-                <button type="submit" id="send-button">Send</button>
-            </form>
-        </main>
+            <div class="history-list">
+                <div class="history-item">
+                    <div class="history-item-title">Information Gathering</div>
+                </div>
+                <div class="history-item">
+                    <div class="history-item-title">Vulnerability Assessment</div>
+                </div>
+                <div class="history-item">
+                    <div class="history-item-title">Web App Testing</div>
+                </div>
+                <div class="history-item">
+                    <div class="history-item-title">Network Scanning</div>
+                </div>
+                <div class="history-item">
+                    <div class="history-item-title">Forensics & Analysis</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="center-content">
+            <div class="landing-page" id="landing-page">
+                <div class="jig-3d-container">
+                    <div class="jig-3d">
+                        <div class="jig-3d-face">J</div>
+                        <div class="jig-3d-face">I</div>
+                        <div class="jig-3d-face">G</div>
+                        <div class="jig-3d-face">J</div>
+                        <div class="jig-3d-face">I</div>
+                        <div class="jig-3d-face">G</div>
+                    </div>
+                </div>
+                <h1 class="landing-title">JIG — Ask. Learn. Build.</h1>
+                <p class="landing-subtitle">Black & white research chat with autonomous panels. Experience the power of AI with JIG.</p>
+                <div class="cta-buttons">
+                    <button class="btn btn-primary" id="start-chat-btn">Start Chat</button>
+                    <button class="btn btn-secondary" id="take-quiz-btn">Take a Quiz</button>
+                    <button class="btn btn-secondary" id="get-certified-btn">Get Certified</button>
+                </div>
+            </div>
+
+            <div class="chat-container" id="chat-container">
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message assistant">
+                        <div class="message-avatar">J</div>
+                        <div class="message-content">
+                            <p>Hello! I'm JIG, your professional AI assistant. How can I help you today?</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <div class="chat-input-wrapper">
+                        <textarea class="chat-input" id="chat-input" placeholder="Ask anything..." rows="1"></textarea>
+                        <button class="chat-send" id="chat-send">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel" id="right-panel">
+            <div class="tabs">
+                <div class="tab active" data-tab="sources">Sources</div>
+                <div class="tab" data-tab="outline">Outline</div>
+                <div class="tab" data-tab="notebook">Notebook</div>
+                <div class="tab" data-tab="windows">Windows</div>
+            </div>
+            <div class="tab-content active" id="sources-tab">
+                <div class="window">
+                    <div class="window-header">
+                        <div class="window-title">Source 1</div>
+                        <div class="window-controls">
+                            <div class="window-control window-minimize"></div>
+                            <div class="window-control window-maximize"></div>
+                            <div class="window-control window-close"></div>
+                        </div>
+                    </div>
+                    <div class="window-content">
+                        <p>This is a source window. It will display relevant sources for the current conversation.</p>
+                    </div>
+                </div>
+                <div class="window">
+                    <div class="window-header">
+                        <div class="window-title">Source 2</div>
+                        <div class="window-controls">
+                            <div class="window-control window-minimize"></div>
+                            <div class="window-control window-maximize"></div>
+                            <div class="window-control window-close"></div>
+                        </div>
+                    </div>
+                    <div class="window-content">
+                        <p>Additional sources will appear here as you continue your conversation with JIG.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content" id="outline-tab">
+                <div class="window">
+                    <div class="window-header">
+                        <div class="window-title">Outline</div>
+                        <div class="window-controls">
+                            <div class="window-control window-minimize"></div>
+                            <div class="window-control window-maximize"></div>
+                            <div class="window-control window-close"></div>
+                        </div>
+                    </div>
+                    <div class="window-content">
+                        <ul>
+                            <li>Introduction</li>
+                            <li>Main Points
+                                <ul>
+                                    <li>Point 1</li>
+                                    <li>Point 2</li>
+                                </ul>
+                            </li>
+                            <li>Conclusion</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content" id="notebook-tab">
+                <div class="window">
+                    <div class="window-header">
+                        <div class="window-title">Notebook</div>
+                        <div class="window-controls">
+                            <div class="window-control window-minimize"></div>
+                            <div class="window-control window-maximize"></div>
+                            <div class="window-control window-close"></div>
+                        </div>
+                    </div>
+                    <div class="window-content">
+                        <textarea style="width: 100%; min-height: 200px; border: 1px solid var(--border-color); padding: 0.5rem; border-radius: 4px;" placeholder="Take notes here..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content" id="windows-tab">
+                <div class="window">
+                    <div class="window-header">
+                        <div class="window-title">Window Manager</div>
+                        <div class="window-controls">
+                            <div class="window-control window-minimize"></div>
+                            <div class="window-control window-maximize"></div>
+                            <div class="window-control window-close"></div>
+                        </div>
+                    </div>
+                    <div class="window-content">
+                        <p>Manage your windows here. You can dock, undock, and organize your workspace.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <script src="script.js"></script>
+
+    <footer>
+        <p>© 2023 JIG. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a> | <a href="#">Accessibility</a></p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const landingPage = document.getElementById('landing-page');
+            const chatContainer = document.getElementById('chat-container');
+            const chatMessages = document.getElementById('chat-messages');
+            const chatInput = document.getElementById('chat-input');
+            const chatSend = document.getElementById('chat-send');
+            const startChatBtn = document.getElementById('start-chat-btn');
+            const newChatBtn = document.getElementById('new-chat-btn');
+            const leftPanel = document.getElementById('left-panel');
+            const rightPanel = document.getElementById('right-panel');
+            const leftPanelToggle = document.getElementById('left-panel-toggle');
+            const rightPanelToggle = document.getElementById('right-panel-toggle');
+            const historyList = document.getElementById('history-list');
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            // Navigation
+            document.getElementById('nav-chat').addEventListener('click', function(e) {
+                e.preventDefault();
+                showChat();
+            });
+
+            document.getElementById('nav-quizzes').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Quizzes feature coming soon!');
+            });
+
+            document.getElementById('nav-certifications').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Certifications feature coming soon!');
+            });
+
+            document.getElementById('nav-docs').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Documentation coming soon!');
+            });
+
+            document.getElementById('nav-account').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Account settings coming soon!');
+            });
+
+            // Show chat function
+            function showChat() {
+                landingPage.style.display = 'none';
+                chatContainer.style.display = 'flex';
+            }
+
+            // Start chat button
+            startChatBtn.addEventListener('click', showChat);
+
+            // New chat button
+            newChatBtn.addEventListener('click', function() {
+                chatMessages.innerHTML = `
+                    <div class="message assistant">
+                        <div class="message-avatar">J</div>
+                        <div class="message-content">
+                            <p>Hello! I'm JIG, your professional AI assistant. How can I help you today?</p>
+                        </div>
+                    </div>
+                `;
+                chatInput.value = '';
+                chatInput.focus();
+            });
+
+            // Send message
+            function sendMessage() {
+                const message = chatInput.value.trim();
+                if (message) {
+                    // Add user message
+                    const userMessage = document.createElement('div');
+                    userMessage.className = 'message user';
+                    userMessage.innerHTML = `
+                        <div class="message-avatar">U</div>
+                        <div class="message-content">
+                            <p>${message}</p>
+                        </div>
+                    `;
+                    chatMessages.appendChild(userMessage);
+
+                    // Clear input
+                    chatInput.value = '';
+                    chatInput.style.height = 'auto';
+
+                    // Add typing indicator
+                    const typingIndicator = document.createElement('div');
+                    typingIndicator.className = 'message assistant';
+                    typingIndicator.innerHTML = `
+                        <div class="message-avatar">J</div>
+                        <div class="message-content">
+                            <div class="typing-indicator">
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                            </div>
+                        </div>
+                    `;
+                    chatMessages.appendChild(typingIndicator);
+
+                    // Scroll to bottom
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                    // Simulate response after delay
+                    setTimeout(() => {
+                        // Remove typing indicator
+                        chatMessages.removeChild(typingIndicator);
+
+                        // Add assistant response
+                        const assistantMessage = document.createElement('div');
+                        assistantMessage.className = 'message assistant';
+                        assistantMessage.innerHTML = `
+                            <div class="message-avatar">J</div>
+                            <div class="message-content">
+                                <p>I understand you're asking about "${message}". Here's what I know:</p>
+                                <p>This is a simulated response from JIG. In a real implementation, this would be connected to the Gemini API to provide intelligent responses based on your query.</p>
+                                <div>
+                                    <span class="citation">Source 1</span>
+                                    <span class="citation">Source 2</span>
+                                    <span class="citation">Source 3</span>
+                                </div>
+                            </div>
+                        `;
+                        chatMessages.appendChild(assistantMessage);
+
+                        // Scroll to bottom
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                        // Add to history
+                        addToHistory(message);
+                    }, 1500);
+                }
+            }
+
+            // Add to history
+            function addToHistory(message) {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                const now = new Date();
+                const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                historyItem.innerHTML = `
+                    <div class="history-item-title">${message.substring(0, 30)}${message.length > 30 ? '...' : ''}</div>
+                    <div class="history-item-time">Today, ${timeString}</div>
+                `;
+
+                historyItem.addEventListener('click', function() {
+                    // Load chat history (simplified for demo)
+                    chatMessages.innerHTML = `
+                        <div class="message user">
+                            <div class="message-avatar">U</div>
+                            <div class="message-content">
+                                <p>${message}</p>
+                            </div>
+                        </div>
+                        <div class="message assistant">
+                            <div class="message-avatar">J</div>
+                            <div class="message-content">
+                                <p>I understand you're asking about "${message}". Here's what I know:</p>
+                                <p>This is a simulated response from JIG. In a real implementation, this would be connected to the Gemini API to provide intelligent responses based on your query.</p>
+                                <div>
+                                    <span class="citation">Source 1</span>
+                                    <span class="citation">Source 2</span>
+                                    <span class="citation">Source 3</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                });
+
+                historyList.insertBefore(historyItem, historyList.firstChild);
+            }
+
+            // Event listeners for sending messages
+            chatSend.addEventListener('click', sendMessage);
+            chatInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            // Auto-resize textarea
+            chatInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+            });
+
+            // Panel toggles
+            leftPanelToggle.addEventListener('click', function() {
+                leftPanel.classList.toggle('open');
+            });
+
+            rightPanelToggle.addEventListener('click', function() {
+                rightPanel.classList.toggle('open');
+            });
+
+            // Tab switching
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+
+                    // Remove active class from all tabs and contents
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+
+                    // Add active class to clicked tab and corresponding content
+                    this.classList.add('active');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+
+            // Window controls
+            document.querySelectorAll('.window-close').forEach(control => {
+                control.addEventListener('click', function() {
+                    const window = this.closest('.window');
+                    window.style.display = 'none';
+                });
+            });
+
+            // Make windows draggable
+            document.querySelectorAll('.window-header').forEach(header => {
+                let isDragging = false;
+                let currentX;
+                let currentY;
+                let initialX;
+                let initialY;
+                let xOffset = 0;
+                let yOffset = 0;
+
+                const window = header.closest('.window');
+
+                header.addEventListener('mousedown', dragStart);
+                document.addEventListener('mousemove', drag);
+                document.addEventListener('mouseup', dragEnd);
+
+                function dragStart(e) {
+                    initialX = e.clientX - xOffset;
+                    initialY = e.clientY - yOffset;
+
+                    if (e.target === header || header.contains(e.target)) {
+                        isDragging = true;
+                    }
+                }
+
+                function drag(e) {
+                    if (isDragging) {
+                        e.preventDefault();
+                        currentX = e.clientX - initialX;
+                        currentY = e.clientY - initialY;
+
+                        xOffset = currentX;
+                        yOffset = currentY;
+
+                        window.style.position = 'absolute';
+                        window.style.transform = `translate(${currentX}px, ${currentY}px)`;
+                        window.style.zIndex = 1000;
+                    }
+                }
+
+                function dragEnd() {
+                    initialX = currentX;
+                    initialY = currentY;
+                    isDragging = false;
+                }
+            });
+
+            // Cite sources
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('citation')) {
+                    // Switch to sources tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+
+                    document.querySelector('[data-tab="sources"]').classList.add('active');
+                    document.getElementById('sources-tab').classList.add('active');
+
+                    // Open right panel on mobile
+                    if (window.innerWidth <= 1024) {
+                        rightPanel.classList.add('open');
+                    }
+                }
+            });
+
+            // Quiz and certification buttons
+            document.getElementById('take-quiz-btn').addEventListener('click', function() {
+                alert('Quizzes feature coming soon!');
+            });
+
+            document.getElementById('get-certified-btn').addEventListener('click', function() {
+                alert('Certifications feature coming soon!');
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // /new clears chat
+                if (e.key === '/' && chatInput.value === 'new') {
+                    e.preventDefault();
+                    newChatBtn.click();
+                    chatInput.value = '';
+                }
+
+                // /cert opens certificate modal
+                if (e.key === '/' && chatInput.value === 'cert') {
+                    e.preventDefault();
+                    alert('Certifications feature coming soon!');
+                    chatInput.value = '';
+                }
+
+                // /quiz opens quiz hub
+                if (e.key === '/' && chatInput.value === 'quiz') {
+                    e.preventDefault();
+                    alert('Quizzes feature coming soon!');
+                    chatInput.value = '';
+                }
+
+                // Esc closes modals/windows
+                if (e.key === 'Escape') {
+                    leftPanel.classList.remove('open');
+                    rightPanel.classList.remove('open');
+                }
+
+                // [ and ] cycle right-panel tabs
+                if (e.key === '[' && !e.shiftKey) {
+                    e.preventDefault();
+                    const activeTab = document.querySelector('.tab.active');
+                    const prevTab = activeTab.previousElementSibling || document.querySelector('.tab:last-child');
+                    prevTab.click();
+                }
+
+                if (e.key === ']' && !e.shiftKey) {
+                    e.preventDefault();
+                    const activeTab = document.querySelector('.tab.active');
+                    const nextTab = activeTab.nextElementSibling || document.querySelector('.tab:first-child');
+                    nextTab.click();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
