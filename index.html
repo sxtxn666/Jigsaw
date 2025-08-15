@@ -201,6 +201,28 @@
             max-width: 600px;
         }
 
+        .page-content {
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .page-content h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .page-content p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 500px;
+        }
+
         .cta-buttons {
             display: flex;
             gap: 1rem;
@@ -492,6 +514,82 @@
             color: var(--text-tertiary);
         }
 
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: var(--bg-primary);
+            margin: 15% auto;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px var(--shadow);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            font-weight: 300;
+            cursor: pointer;
+            color: var(--text-tertiary);
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            color: var(--text-primary);
+        }
+
+        .modal-body .form-group {
+            margin: 1.5rem 0;
+        }
+
+        .modal-body label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-body input[type="password"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .left-panel, .right-panel {
@@ -602,7 +700,7 @@
                 <li><a href="#" id="nav-quizzes">Quizzes</a></li>
                 <li><a href="#" id="nav-certifications">Certifications</a></li>
                 <li><a href="#" id="nav-docs">Docs</a></li>
-                <li><a href="#" id="nav-account">Account</a></li>
+                <li><a href="#" id="nav-settings">Settings</a></li>
             </ul>
         </nav>
     </header>
@@ -694,6 +792,21 @@
                     </div>
                 </div>
             </div>
+
+            <div id="quizzes-page" class="page-content" style="display: none;">
+                <h1>Quizzes</h1>
+                <p>This feature is under construction. Check back soon for interactive quizzes!</p>
+            </div>
+
+            <div id="certifications-page" class="page-content" style="display: none;">
+                <h1>Certifications</h1>
+                <p>This feature is under construction. Get certified with JIG soon!</p>
+            </div>
+
+            <div id="docs-page" class="page-content" style="display: none;">
+                <h1>Documentation</h1>
+                <p>This feature is under construction. Comprehensive documentation is coming soon!</p>
+            </div>
         </div>
 
         <div class="right-panel" id="right-panel">
@@ -766,7 +879,7 @@
                         </div>
                     </div>
                     <div class="window-content">
-                        <textarea style="width: 100%; min-height: 200px; border: 1px solid var(--border-color); padding: 0.5rem; border-radius: 4px;" placeholder="Take notes here..."></textarea>
+                        <textarea id="notebook-textarea" style="width: 100%; min-height: 200px; border: 1px solid var(--border-color); padding: 0.5rem; border-radius: 4px;" placeholder="Take notes here..."></textarea>
                     </div>
                 </div>
             </div>
@@ -784,6 +897,24 @@
                         <p>Manage your windows here. You can dock, undock, and organize your workspace.</p>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="settings-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button class="close-modal" id="close-settings-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h3>API Configuration</h3>
+                <p>Enter your Google Gemini API key below. This is stored locally in your browser and is never sent to our servers.</p>
+                <div class="form-group">
+                    <label for="api-key-input">Google Gemini API Key</label>
+                    <input type="password" id="api-key-input" placeholder="Enter your API key">
+                </div>
+                <button class="btn btn-primary" id="save-api-key">Save Key</button>
             </div>
         </div>
     </div>
@@ -809,41 +940,81 @@
             const historyList = document.getElementById('history-list');
             const tabs = document.querySelectorAll('.tab');
             const tabContents = document.querySelectorAll('.tab-content');
+            const settingsModal = document.getElementById('settings-modal');
+            const closeSettingsModal = document.getElementById('close-settings-modal');
+            const navSettings = document.getElementById('nav-settings');
+            const saveApiKeyBtn = document.getElementById('save-api-key');
+            const apiKeyInput = document.getElementById('api-key-input');
+            const quizzesPage = document.getElementById('quizzes-page');
+            const certificationsPage = document.getElementById('certifications-page');
+            const docsPage = document.getElementById('docs-page');
+            const notebookTextarea = document.getElementById('notebook-textarea');
 
-            // Navigation
-            document.getElementById('nav-chat').addEventListener('click', function(e) {
-                e.preventDefault();
-                showChat();
-            });
-
-            document.getElementById('nav-quizzes').addEventListener('click', function(e) {
-                e.preventDefault();
-                alert('Quizzes feature coming soon!');
-            });
-
-            document.getElementById('nav-certifications').addEventListener('click', function(e) {
-                e.preventDefault();
-                alert('Certifications feature coming soon!');
-            });
-
-            document.getElementById('nav-docs').addEventListener('click', function(e) {
-                e.preventDefault();
-                alert('Documentation coming soon!');
-            });
-
-            document.getElementById('nav-account').addEventListener('click', function(e) {
-                e.preventDefault();
-                alert('Account settings coming soon!');
-            });
-
-            // Show chat function
-            function showChat() {
-                landingPage.style.display = 'none';
-                chatContainer.style.display = 'flex';
+            // --- Notebook ---
+            // Load notebook content from local storage
+            const savedNotebookContent = localStorage.getItem('notebookContent');
+            if (savedNotebookContent) {
+                notebookTextarea.value = savedNotebookContent;
             }
 
-            // Start chat button
-            startChatBtn.addEventListener('click', showChat);
+            // Save notebook content to local storage on input
+            notebookTextarea.addEventListener('input', function() {
+                localStorage.setItem('notebookContent', this.value);
+            });
+
+            // --- Page Navigation ---
+            function showPage(pageId) {
+                const pages = [landingPage, chatContainer, quizzesPage, certificationsPage, docsPage];
+                pages.forEach(page => {
+                    if (page) { // Ensure the element exists
+                        page.style.display = (page.id === pageId) ? 'flex' : 'none';
+                    }
+                });
+            }
+
+            // Navigation event listeners
+            document.getElementById('nav-chat').addEventListener('click', (e) => { e.preventDefault(); showPage('chat-container'); });
+            document.getElementById('nav-quizzes').addEventListener('click', (e) => { e.preventDefault(); showPage('quizzes-page'); });
+            document.getElementById('nav-certifications').addEventListener('click', (e) => { e.preventDefault(); showPage('certifications-page'); });
+            document.getElementById('nav-docs').addEventListener('click', (e) => { e.preventDefault(); showPage('docs-page'); });
+            document.getElementById('nav-settings').addEventListener('click', (e) => {
+                e.preventDefault();
+                settingsModal.style.display = 'block';
+            });
+            startChatBtn.addEventListener('click', () => showPage('chat-container'));
+
+
+            // --- API Key Management ---
+            // Load API key from local storage on startup
+            const savedApiKey = localStorage.getItem('geminiApiKey');
+            if (savedApiKey) {
+                apiKeyInput.value = savedApiKey;
+            }
+
+            // Save API key
+            saveApiKeyBtn.addEventListener('click', function() {
+                const apiKey = apiKeyInput.value.trim();
+                if (apiKey) {
+                    localStorage.setItem('geminiApiKey', apiKey);
+                    alert('API Key saved successfully!');
+                    settingsModal.style.display = 'none';
+                } else {
+                    alert('Please enter an API key.');
+                }
+            });
+
+            // --- Modal Management ---
+            // Close settings modal
+            closeSettingsModal.addEventListener('click', function() {
+                settingsModal.style.display = 'none';
+            });
+
+            // Close modal on outside click
+            window.addEventListener('click', function(e) {
+                if (e.target == settingsModal) {
+                    settingsModal.style.display = 'none';
+                }
+            });
 
             // New chat button
             newChatBtn.addEventListener('click', function() {
@@ -860,70 +1031,110 @@
             });
 
             // Send message
-            function sendMessage() {
+            async function sendMessage() {
                 const message = chatInput.value.trim();
-                if (message) {
-                    // Add user message
-                    const userMessage = document.createElement('div');
-                    userMessage.className = 'message user';
-                    userMessage.innerHTML = `
-                        <div class="message-avatar">U</div>
-                        <div class="message-content">
-                            <p>${message}</p>
+                if (!message) return;
+
+                // Add user message
+                const userMessage = document.createElement('div');
+                userMessage.className = 'message user';
+                userMessage.innerHTML = `
+                    <div class="message-avatar">U</div>
+                    <div class="message-content">
+                        <p>${message}</p>
+                    </div>
+                `;
+                chatMessages.appendChild(userMessage);
+
+                // Clear input and scroll
+                chatInput.value = '';
+                chatInput.style.height = 'auto';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                // Add typing indicator
+                const typingIndicator = document.createElement('div');
+                typingIndicator.className = 'message assistant';
+                typingIndicator.innerHTML = `
+                    <div class="message-avatar">J</div>
+                    <div class="message-content">
+                        <div class="typing-indicator">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
                         </div>
-                    `;
-                    chatMessages.appendChild(userMessage);
+                    </div>
+                `;
+                chatMessages.appendChild(typingIndicator);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
 
-                    // Clear input
-                    chatInput.value = '';
-                    chatInput.style.height = 'auto';
-
-                    // Add typing indicator
-                    const typingIndicator = document.createElement('div');
-                    typingIndicator.className = 'message assistant';
-                    typingIndicator.innerHTML = `
+                const apiKey = localStorage.getItem('geminiApiKey');
+                if (!apiKey) {
+                    chatMessages.removeChild(typingIndicator);
+                    const errorMessage = document.createElement('div');
+                    errorMessage.className = 'message assistant';
+                    errorMessage.innerHTML = `
                         <div class="message-avatar">J</div>
                         <div class="message-content">
-                            <div class="typing-indicator">
-                                <div class="typing-dot"></div>
-                                <div class="typing-dot"></div>
-                                <div class="typing-dot"></div>
-                            </div>
+                            <p>Error: API key not found. Please add your Google Gemini API key in the Settings menu.</p>
                         </div>
                     `;
-                    chatMessages.appendChild(typingIndicator);
-
-                    // Scroll to bottom
+                    chatMessages.appendChild(errorMessage);
                     chatMessages.scrollTop = chatMessages.scrollHeight;
+                    return;
+                }
 
-                    // Simulate response after delay
-                    setTimeout(() => {
-                        // Remove typing indicator
-                        chatMessages.removeChild(typingIndicator);
+                const apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
 
-                        // Add assistant response
-                        const assistantMessage = document.createElement('div');
-                        assistantMessage.className = 'message assistant';
-                        assistantMessage.innerHTML = `
-                            <div class="message-avatar">J</div>
-                            <div class="message-content">
-                                <p>I understand you're asking about "${message}". Here's what I know:</p>
-                                <p>This is a simulated response from JIG. In a real implementation, this would be connected to the Gemini API to provide intelligent responses based on your query.</p>
-                                <div>
-                                    <span class="citation">Source 1</span>
-                                    <span class="citation">Source 2</span>
-                                    <span class="citation">Source 3</span>
-                                </div>
-                            </div>
-                        `;
-                        chatMessages.appendChild(assistantMessage);
+                try {
+                    const response = await fetch(`${apiUrl}?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{
+                                    text: message
+                                }]
+                            }]
+                        })
+                    });
 
-                        // Scroll to bottom
-                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    chatMessages.removeChild(typingIndicator);
 
-                        // Add to history
-                        addToHistory(message);
-                    }, 1500);
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error.message || 'An unknown error occurred.');
+                    }
+
+                    const data = await response.json();
+                    const botResponse = data.candidates[0].content.parts[0].text;
+
+                    // Add assistant response
+                    const assistantMessage = document.createElement('div');
+                    assistantMessage.className = 'message assistant';
+                    assistantMessage.innerHTML = `
+                        <div class="message-avatar">J</div>
+                        <div class="message-content">
+                            <p>${botResponse}</p>
+                        </div>
+                    `;
+                    chatMessages.appendChild(assistantMessage);
+                    addToHistory(message);
+
+                } catch (error) {
+                    chatMessages.removeChild(typingIndicator);
+                    const errorMessage = document.createElement('div');
+                    errorMessage.className = 'message assistant';
+                    errorMessage.innerHTML = `
+                        <div class="message-avatar">J</div>
+                        <div class="message-content">
+                            <p>Sorry, something went wrong: ${error.message}</p>
+                        </div>
+                    `;
+                    chatMessages.appendChild(errorMessage);
+                } finally {
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
                 }
             }
 
